@@ -16,7 +16,7 @@ class Users(Base):
 
 class Notes(Base):
     __tablename__ = 'notes'
-    id = Column(Integer, primary_key=True)
+    note_id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.user_id'))
     date = Column(DateTime, default=datetime.date.today().strftime("%d/%m/%Y"))
     note_content = Column(String(length=300))
