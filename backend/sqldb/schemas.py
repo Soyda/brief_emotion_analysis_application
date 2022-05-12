@@ -8,7 +8,7 @@ class NoteBase(BaseModel):
 
 
 class NoteCreate(NoteBase):
-    pass
+    user_id : int
 
 
 class Note(NoteBase):
@@ -25,8 +25,9 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
+    is_admin : bool
     password: str
-
+    username : str
 
 class User(UserBase):
     id: int

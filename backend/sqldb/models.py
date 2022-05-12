@@ -5,6 +5,8 @@ import datetime
 
 
 
+
+
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, index=True)
@@ -22,4 +24,6 @@ class Note(Base):
     note_content = Column(String(length=500))
     note_sentiment = Column(String)
 
-    notes = relationship("User", back_populates="notes")
+    users = relationship("User", back_populates="notes")
+
+
