@@ -59,10 +59,20 @@ def create_note_for_user(
     return crud.create_user_note(db=db, note=note, user_id=user_id)
 
 
-@app.get("/notes/", response_model=List[schemas.Note])
-def read_notes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+@app.get("/users/{user_id}/notes/", response_model=List[schemas.Note])
+def read_all_notes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     notes = crud.get_notes(db, skip=skip, limit=limit)
     return notes
+
+@app.get("/users/{user_id}/notes/{id}", response_model=schemas.Note)
+def read_note_by_id(id:int, user_id:int, db: Session = Depends(get_db)):
+    note = crud.get_note(db, user_id=user_id, id=id)
+    return note
+
+@app.patch("/users/{user_id}/notes/{id}", response_model=schemas.NoteUpdate)
+def modify_note_by_id(note:schemas.NoteUpdate, db: Session = Depends(get_db)):
+    note = crud.modify_note(db, note=note)
+    return note
 
 if __name__ == "__main__":
     uvicorn.run("main:app")

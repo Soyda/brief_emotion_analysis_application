@@ -20,7 +20,7 @@ class Note(Base):
     __tablename__ = 'notes'
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id'))
-    date = Column(DateTime, default=datetime.date.today().strftime("%d/%m/%Y"))
+    date = Column(String, default=datetime.date.today().strftime("%d/%m/%Y"))
     note_content = Column(String(length=500))
     note_sentiment = Column(String)
 

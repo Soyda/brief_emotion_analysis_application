@@ -1,11 +1,12 @@
 from sqlalchemy.orm import Session
 from . import models, schemas
 import csv
+import datetime
+
 
 
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
-
 
 def get_user_by_username(db: Session, username: str):
     return db.query(models.User).filter(models.User.username == username).first()
@@ -27,13 +28,30 @@ def create_user(db: Session, user: schemas.UserCreate):
 def get_notes(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Note).offset(skip).limit(limit).all()
 
+def get_note(db: Session, user_id:int, id: int):
+    return db.query(models.Note).filter(models.Note.id == id and models.Note.user_id == user_id).first()
+
 
 def create_user_note(db: Session, note: schemas.NoteCreate, user_id: int):
-    db_note = models.Note(**note.dict(), owner_id=user_id)
+    sentiment_pred = "SENTIMENT_PREDICTION" #note.note_sentiment
+    date = datetime.date.today().strftime("%d/%m/%Y")
+    # db_note = models.Note(note_content=note.note_content, note_sentiment=sentiment_pred, date=date, user_id=user_id)
+    db_note = models.Note(**note.dict()) #, user_id=user_id)
     db.add(db_note)
     db.commit()
     db.refresh(db_note)
     return db_note
+
+def modify_note(db: Session, note: schemas.NoteUpdate):
+    db_note = models.Note(**note.dict()) 
+    db.add(db_note)
+    db.commit()
+    db.refresh(db_note)
+    return db_note
+
+
+def delete_note():
+    pass
 
 
 
