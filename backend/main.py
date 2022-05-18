@@ -23,11 +23,11 @@ def get_db():
 
 # models.fill_db(SessionLocal)
 
-@app.get("/test")
+@app.get("/")
 async def root():
     today = date.today()
     d1 = today.strftime("%d/%m/%Y")
-    return {"message": f"Hello World, today is {d1}"}
+    return {"message": f"Hello World to the API of the feelings, today is {d1}"}
 
 @app.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
@@ -69,10 +69,15 @@ def read_note_by_id(id:int, user_id:int, db: Session = Depends(get_db)):
     note = crud.get_note(db, user_id=user_id, id=id)
     return note
 
-@app.patch("/users/{user_id}/notes/{id}", response_model=schemas.NoteUpdate)
-def modify_note_by_id(note:schemas.NoteUpdate, db: Session = Depends(get_db)):
-    note = crud.modify_note(db, note=note)
+@app.patch("/users/{user_id}/notes/{id}", response_model=schemas.Note)
+def modify_note_by_id(user_id: int, id: int, note:schemas.NoteUpdate, db: Session = Depends(get_db)):
+    note = crud.modify_note(db, note=note, user_id=user_id, id=id)
     return note
+
+@app.delete("/users/{user_id}/notes/{id}", response_model=schemas.Note)
+def delete_note_by_id(user_id: int, id: int, db: Session = Depends(get_db)):
+    note = crud.delete_note(db, user_id=user_id, id=id)
+    return {"message": f"Note {id} deleted"}
 
 if __name__ == "__main__":
     uvicorn.run("main:app")

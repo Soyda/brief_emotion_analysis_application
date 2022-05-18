@@ -42,16 +42,23 @@ def create_user_note(db: Session, note: schemas.NoteCreate, user_id: int):
     db.refresh(db_note)
     return db_note
 
-def modify_note(db: Session, note: schemas.NoteUpdate):
-    db_note = models.Note(**note.dict()) 
+def modify_note(db: Session, user_id:int, id: int, note: schemas.NoteUpdate):
+    # db_note = models.Note(**note.dict()) 
+    db_note = db.query(models.Note).filter(models.Note.user_id == user_id, models.Note.id == id).first()
+    note_data = note.dict(exclude_unset=True)
+    for key, value in note_data.items():
+        setattr(db_note, key, value)
     db.add(db_note)
     db.commit()
     db.refresh(db_note)
     return db_note
 
 
-def delete_note():
-    pass
+def delete_note(db: Session, user_id:int, id: int):
+    db_note = db.query(models.Note).filter(models.Note.user_id == user_id, models.Note.id == id).first()
+    db.delete(db_note) 
+    db.commit()
+    return {"message":f"Note {id} deleted"}
 
 
 

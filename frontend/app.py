@@ -50,17 +50,25 @@ def modify_note(user_id, id, new_note):
             # "id": id,
             "user_id": user_id,
             "note_content": new_note,
-            # "date":today,
+            "date":today,
             "note_sentiment":"TEST_SENTIMENT"
         }
         return requests.patch(f"{URL_API}/users/{user_id}/notes/{id}", json=modified_note)
     else :
-        st.write("You can't modify a former note")
+        return st.write("You can't modify a former note")
+
+def delete_note(user_id, id):
+    infos = {
+        "user_id":user_id,
+        "id":id
+    }
+    return requests.delete(f"{URL_API}/users/{user_id}/notes/{id}", json=infos)
+    
 
 
             
 create_user(True, "Mister ZEN", "1234")
-create_user(False, "Patient", "1234")
+create_user(False, "Bob", "1234")
 
 x = requests.get(f"{URL_API}/users")
 st.write(x.json())
@@ -73,22 +81,22 @@ patient_id = x.json()[1]["id"]
 patient_info = requests.get(f"{URL_API}/users/{patient_id}")
 st.write("You are logged as " + patient_info.json()["username"])
 
-note = "Today is a good day"
-create_note(patient_id, note)
-st.write(get_notes(patient_id))
+# note = "this is a note from bob"
+# create_note(3, note)
+# st.write(get_notes(patient_id))
 
 user_id = 2
-id = 15
+id = 34
 st.write("test note by id")
 st.write(get_note(user_id, id))
 
-# st.write("tet modify note above")
-# new_note="I'm a modified note !"
-# modify_note(user_id,id,new_note)
-# st.write("display modified note")
-# st.write(get_note(user_id, id))
+st.write("test modify note from above")
+new_note="I've been modified again !"
+modify_note(user_id, id, new_note)
+st.write("display modified note")
+st.write(get_note(user_id, id))
 
-
+delete_note(2,20)
 
 if __name__ == '__main__':
     main()
