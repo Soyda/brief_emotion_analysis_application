@@ -7,7 +7,7 @@ URL_API = "http://host.docker.internal:8000"
 def main():
     
     st.title("Emotion prediction")
-    x = requests.get('http://host.docker.internal:8000/test')
+    x = requests.get('http://host.docker.internal:8000/')
     st.write(x.json()["message"])
 
 # create user
@@ -81,12 +81,12 @@ patient_id = x.json()[1]["id"]
 patient_info = requests.get(f"{URL_API}/users/{patient_id}")
 st.write("You are logged as " + patient_info.json()["username"])
 
-# note = "this is a note from bob"
-# create_note(3, note)
+note = "this is a note from bob"
+create_note(3, note)
 # st.write(get_notes(patient_id))
 
-user_id = 2
-id = 34
+user_id = 3
+id = 38
 st.write("test note by id")
 st.write(get_note(user_id, id))
 
@@ -96,7 +96,7 @@ modify_note(user_id, id, new_note)
 st.write("display modified note")
 st.write(get_note(user_id, id))
 
-delete_note(2,20)
+# delete_note(3,38)
 
 if __name__ == '__main__':
     main()
